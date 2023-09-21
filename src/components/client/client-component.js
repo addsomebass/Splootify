@@ -4,13 +4,17 @@ function ClientComponent() {
 
 	const [input, setInput] = useState('');
 	const [list, setList] = useState([]);
+	const [albumResults, setAlbumResults] = useState([]);
+	const [artistResults, setArtistResults] = useState([]);
 
-	const fetchData = async () => {
+	let genres = ["acoustic", "afrobeat", "alt-rock", "alternative", "ambient", "anime", "black-metal", "bluegrass", "blues", "bossanova", "brazil", "breakbeat", "british", "cantopop", "chicago-house", "children", "chill", "classical", "club", "comedy", "country", "dance", "dancehall", "death-metal", "deep-house", "detroit-techno", "disco", "disney", "drum-and-bass", "dub", "dubstep", "edm", "electro", "electronic", "emo", "folk", "forro", "french", "funk", "garage", "german", "gospel", "goth", "grindcore", "groove", "grunge", "guitar", "happy", "hard-rock", "hardcore", "hardstyle", "heavy-metal", "hip-hop", "holidays", "honky-tonk", "house", "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-dance", "j-idol", "j-pop", "j-rock", "jazz", "k-pop", "kids", "latin", "latino", "malay", "mandopop", "metal", "metal-misc", "metalcore", "minimal-techno", "movies", "mpb", "new-age", "new-release", "opera", "pagode", "party", "philippines-opm", "piano", "pop", "pop-film", "post-dubstep", "power-pop", "progressive-house", "psych-rock", "punk", "punk-rock", "r-n-b", "rainy-day", "reggae", "reggaeton", "road-trip", "rock", "rock-n-roll", "rockabilly", "romance", "sad", "salsa", "samba", "sertanejo", "show-tunes", "singer-songwriter", "ska", "sleep", "songwriter", "soul", "soundtracks", "spanish", "study", "summer", "swedish", "synth-pop", "tango", "techno", "trance", "trip-hop", "turkish", "work-out", "world-music"]
+
+	async function fetchData() {
 		console.log("clicked");
 
-		let recommendations = await getRecommendations(10, null, "pagode", null,
+		let recommendations = await getRecommendations(10, '6qqNVTkY8uBg9cP3Jd7DAH', "electronic", null,
 			null, null, null,
-			null, null, null,
+			0.5, 0.8, 0.9,
 			null, null, null,
 			null, null, null,
 			null, null, null,
@@ -50,7 +54,7 @@ function ClientComponent() {
 									  minTimeSignature, maxTimeSignature, targetTimeSignature,
 									  minValence, maxValence, targetValence) {
 
-		let access_token = 'BQC2o8AtVLhVDWXf3rIrNRxufVjmL2eEn9DHo4gtBR1JlEz2znnaluS2Cv6F08xut9twmhAe_69680_kBCOAoG-kZBT77tJYyYxs7tGa-R0qoKyThtIZ3aAHri9mySNTjtiX0dj_ubARZKb7J2ViSQ0wECtJIxJ1p-nYf6hF8W0RMoL-3DZx7Ncgu36OLZeP0sB9T1hOGYsTmP5Zai0JXQ';
+
 
 			// Define the URL and parameters
 
@@ -143,109 +147,135 @@ function ClientComponent() {
 		};
 
 		let url = new URL('https://api.spotify.com/v1/recommendations');
-			// Add the parameters to the URL
+
+		let method = 'GET';
+
+		return await executeSpotifyRequest(params, url, method);
+	}
+
+	async function searchAndDisplayResult() {
+		let response = await spotifySearch(input);
+
+		displaySearchResults(response);
+	}
+
+	function displaySearchResults(searchResults) {
+
+		let artists = {};
+		let albums = {};
+
+		let albumResults = searchResults.results.albums.items;
+
+		for (const album of albumResults) {
+			albums[album.id] = album.name;
+
+			for (const artist of album.artists) {
+				artists[artist.id] = artist.name;
+			}
+		}
+
+		let artistResults = searchResults.results.artists.items;
+
+		for (const artist of artistResults) {
+			artists[artist.id] = artist.name;
+		}
+
+		setAlbumResults(albums);
+		setArtistResults(artists);
+
+	}
+
+
+	async function spotifySearch(artistSearchString) {
+
+		let url = new URL('https://api.spotify.com/v1/search');
+		// Add the parameters to the URL
+		let params = {
+			q : artistSearchString,
+			type: "artist,album",
+			market: "US",
+			limit: 15
+		}
+
+
+		let method = 'GET';
+
+		return await executeSpotifyRequest(params, url, method);
+
+	}
+
+
+	async function executeSpotifyRequest(params, url, method) {
 		Object.keys(params).forEach(key => {
 			if (params[key]) {
 				url.searchParams.append(key, params[key])
 			}
 		});
 
+		let access_token = 'BQD0jf6zSvXYAYEYzwgw1JHyE3ii8z2z8p9hRKwqX-RiR_3JAVLdAXGw0wfNRV3aRmq2Lv3EbEuFCZ0lHz3N8j2yajqlBw6n58qilDJjSgGQoUTjH5LgKUKsKxdJcESRtJfjDZ-LgcsYi0JKjuC9VUg7dFiu4fAS0cDxo0VKMKjwoMQqjbsmJepJKzyxBSzbl4PjvKIFSN1uF_pd08vYCA';
 
-		let recommendations;
-		let error;
+		let headers = {'Authorization': 'Bearer ' + access_token};
+
+		let response = {};
 
 		await fetch(url, {
-			method: 'GET',
-			headers: {'Authorization': 'Bearer ' + access_token}
+			method: method,
+			headers: headers
 		})
-			.then(response => {
-				if (!response.ok) {
+			.then(urlResponse => {
+				if (!urlResponse.ok) {
 					// Clone the response to read it twice
-					const clonedResponse = response.clone();
+					const clonedResponse = urlResponse.clone();
 
 					// Read the response body as text
 					return clonedResponse.text().then(body => {
-						throw new Error(`HTTP error! status: ${response.status}, body: ${body}`);
+						throw new Error(`HTTP error! status: ${urlResponse.status}, body: ${body}`);
 					});
 
 				}
-				return response.json();
+				return urlResponse.json();
 			})
 			.then(data => {
-			// Use the data
-				recommendations = data;
+				// Use the data
+				response.results = data;
 			})
-			.catch(errorData => {
-				console.log('There was a problem with the fetch operation: ' + errorData.message);
-				error = "Error: " + errorData.message;
+			.catch(error => {
+				console.log('There was a problem with the fetch operation: ' + error.message);
+				response.error = "Error: " + error.message;
 			});
 
-		return {
-			results: recommendations,
-			error: error
-		}
-	}
-
-	function convertToHref(recommendations) {
-
-		let links = [];
-
-		for (const track of recommendations.results.tracks) {
-			links.push(`<a href="${track.external_urls.spotify}">${track.name}</a><br>`)
-		}
-
-		return links.join('\n');
-
+		return response;
 	}
 
 
 	return (
 		<div>
-			<input type="text" value={input} onChange={e => setInput(e.target.value)}/>
 			<button onClick={fetchData}>Fetch Data</button>
+
 			<ul>
 				{list.map((track, index) => {
 					return <li key={index}><a href={track.external_urls.spotify}>{track.name}</a></li>
 				})}
 			</ul>
+
+			<input type="text" value={input} onChange={e => setInput(e.target.value)}/>
+			<button onClick={searchAndDisplayResult}>Spotify Search</button>
+
+			<ul>
+				{Object.keys(albumResults).map((albumId, index) => (
+					<li key={index}>{albumResults[albumId]} - {albumId}</li>
+				))}
+			</ul>
+
+			<ul>
+				{Object.keys(artistResults).map((artistId, index) => (
+					<li key={index}>{artistResults[artistId]} - {artistId}</li>
+				))}
+			</ul>
+
 		</div>
 	);
 
 }
 
 export default ClientComponent;
-
-/*
-
-
-
-
-
-
-
-
-window.onload = async function () {
-
-let recommendationsResults = await getRecommendations(10, null, 'classical,country', null,
-null, null,null,
-null, null,null,
-null, null,null,
-null, null,null,
-null, null,null,
-null, null,null,
-null, null,null,
-null, null,null,
-null, null,null,
-null, null,null,
-null, null,null,
-null, null,null,
-null, null,null
-);
-
-console.log(recommendationsResults); // Outputs: 3
-
-
-
-			// You can also display the result on your HTML page
-document.body.innerHTML += `<p>${convertToHref(recommendationsResults)}</p>`;
-};*/
