@@ -3,19 +3,31 @@ import React, {useState} from "react";
 function ClientComponent() {
 
 	const [input, setInput] = useState('');
-	const [recommendations, setRecommendations] = useState([]);
+	const [list, setList] = useState([]);
 	const [albumResults, setAlbumResults] = useState([]);
 	const [artistResults, setArtistResults] = useState([]);
+	const [seanString, updateSeanString] = useState('Sean fucking rules!!!')
 
 
 	let genres = ["acoustic", "afrobeat", "alt-rock", "alternative", "ambient", "anime", "black-metal", "bluegrass", "blues", "bossanova", "brazil", "breakbeat", "british", "cantopop", "chicago-house", "children", "chill", "classical", "club", "comedy", "country", "dance", "dancehall", "death-metal", "deep-house", "detroit-techno", "disco", "disney", "drum-and-bass", "dub", "dubstep", "edm", "electro", "electronic", "emo", "folk", "forro", "french", "funk", "garage", "german", "gospel", "goth", "grindcore", "groove", "grunge", "guitar", "happy", "hard-rock", "hardcore", "hardstyle", "heavy-metal", "hip-hop", "holidays", "honky-tonk", "house", "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-dance", "j-idol", "j-pop", "j-rock", "jazz", "k-pop", "kids", "latin", "latino", "malay", "mandopop", "metal", "metal-misc", "metalcore", "minimal-techno", "movies", "mpb", "new-age", "new-release", "opera", "pagode", "party", "philippines-opm", "piano", "pop", "pop-film", "post-dubstep", "power-pop", "progressive-house", "psych-rock", "punk", "punk-rock", "r-n-b", "rainy-day", "reggae", "reggaeton", "road-trip", "rock", "rock-n-roll", "rockabilly", "romance", "sad", "salsa", "samba", "sertanejo", "show-tunes", "singer-songwriter", "ska", "sleep", "songwriter", "soul", "soundtracks", "spanish", "study", "summer", "swedish", "synth-pop", "tango", "techno", "trance", "trip-hop", "turkish", "work-out", "world-music"]
 
 	async function fetchData() {
 
+		let intervalId = setInterval( () => {
+			updateSeanString(Math.random().toString(36).substr(2, 8))
+
+		}, 250);
+
+		setTimeout( () => {
+			clearInterval(intervalId)
+		}, 5000)
+
+
+		updateSeanString("new String")
 
 		console.log("clicked");
 
-		let recommendations = await getRecommendations(10, '6qqNVTkY8uBg9cP3Jd7DAH,06HL4z0CvFAxyc27GXpf02', "electronic", null,
+		let recommendations = await getRecommendations(10, '4tZwfgrHOc3mvqYlEYSvVi', "electronic", null,
 			null, null, null,
 			0.5, 0.8, 0.9,
 			null, null, null,
@@ -38,7 +50,7 @@ function ClientComponent() {
 		//
 		// console.log(myList);
 
-		setRecommendations(recommendations.results.tracks);
+		setList(recommendations.results.tracks);
 
 	}
 
@@ -255,14 +267,15 @@ function ClientComponent() {
 		<div>
 			<button onClick={fetchData}>Fetch Data</button>
 
+			<h2>{seanString}</h2>
+
 			<ul>
-				{recommendations.map((track, index) => {
+				{list.map((track, index) => {
 					return <li key={index}><a href={track.external_urls.spotify}>{track.name}</a></li>
 				})}
 			</ul>
 
 			<input type="text" value={input} onChange={e => setInput(e.target.value)}/>
-
 			<button onClick={searchAndDisplayResult}>Spotify Search</button>
 
 			<ul>
