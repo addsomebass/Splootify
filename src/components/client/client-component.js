@@ -6,13 +6,28 @@ function ClientComponent() {
 	const [list, setList] = useState([]);
 	const [albumResults, setAlbumResults] = useState([]);
 	const [artistResults, setArtistResults] = useState([]);
+	const [seanString, updateSeanString] = useState('Sean fucking rules!!!')
+
 
 	let genres = ["acoustic", "afrobeat", "alt-rock", "alternative", "ambient", "anime", "black-metal", "bluegrass", "blues", "bossanova", "brazil", "breakbeat", "british", "cantopop", "chicago-house", "children", "chill", "classical", "club", "comedy", "country", "dance", "dancehall", "death-metal", "deep-house", "detroit-techno", "disco", "disney", "drum-and-bass", "dub", "dubstep", "edm", "electro", "electronic", "emo", "folk", "forro", "french", "funk", "garage", "german", "gospel", "goth", "grindcore", "groove", "grunge", "guitar", "happy", "hard-rock", "hardcore", "hardstyle", "heavy-metal", "hip-hop", "holidays", "honky-tonk", "house", "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-dance", "j-idol", "j-pop", "j-rock", "jazz", "k-pop", "kids", "latin", "latino", "malay", "mandopop", "metal", "metal-misc", "metalcore", "minimal-techno", "movies", "mpb", "new-age", "new-release", "opera", "pagode", "party", "philippines-opm", "piano", "pop", "pop-film", "post-dubstep", "power-pop", "progressive-house", "psych-rock", "punk", "punk-rock", "r-n-b", "rainy-day", "reggae", "reggaeton", "road-trip", "rock", "rock-n-roll", "rockabilly", "romance", "sad", "salsa", "samba", "sertanejo", "show-tunes", "singer-songwriter", "ska", "sleep", "songwriter", "soul", "soundtracks", "spanish", "study", "summer", "swedish", "synth-pop", "tango", "techno", "trance", "trip-hop", "turkish", "work-out", "world-music"]
 
 	async function fetchData() {
+
+		let intervalId = setInterval( () => {
+			updateSeanString(Math.random().toString(36).substr(2, 8))
+
+		}, 250);
+
+		setTimeout( () => {
+			clearInterval(intervalId)
+		}, 5000)
+
+
+		updateSeanString("new String")
+
 		console.log("clicked");
 
-		let recommendations = await getRecommendations(10, '6qqNVTkY8uBg9cP3Jd7DAH', "electronic", null,
+		let recommendations = await getRecommendations(10, '4tZwfgrHOc3mvqYlEYSvVi', "electronic", null,
 			null, null, null,
 			0.5, 0.8, 0.9,
 			null, null, null,
@@ -212,7 +227,7 @@ function ClientComponent() {
 			}
 		});
 
-		let access_token = 'BQD0jf6zSvXYAYEYzwgw1JHyE3ii8z2z8p9hRKwqX-RiR_3JAVLdAXGw0wfNRV3aRmq2Lv3EbEuFCZ0lHz3N8j2yajqlBw6n58qilDJjSgGQoUTjH5LgKUKsKxdJcESRtJfjDZ-LgcsYi0JKjuC9VUg7dFiu4fAS0cDxo0VKMKjwoMQqjbsmJepJKzyxBSzbl4PjvKIFSN1uF_pd08vYCA';
+		let access_token = 'BQA8hKIYzkkc7VQeI7B6YYoP_Z_H8mpG61UPEXU69oG3k_QVwkTQTAzC7PZbWO1e1X81Q0SRylKJd2E60MJfeY-2fQOKHcjNXgGHJaDSQz2L1L6zw233SwzYdbdTj5l9B_yAtKJUKwlrhq8GL4mf_t4MV6Ib88zhSYMxJQUlT2jRjOStffGbGxG3j6Xn9bCBMBZV1o4kMPnHxCc8CJxkJg';
 
 		let headers = {'Authorization': 'Bearer ' + access_token};
 
@@ -251,6 +266,8 @@ function ClientComponent() {
 	return (
 		<div>
 			<button onClick={fetchData}>Fetch Data</button>
+
+			<h2>{seanString}</h2>
 
 			<ul>
 				{list.map((track, index) => {
