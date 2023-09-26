@@ -1,4 +1,7 @@
+"use client";
+
 import React, {useState} from "react";
+import {SpotifyAuth} from "@/components/auth/SpotifyAuth";
 
 function ClientComponent() {
 
@@ -215,7 +218,10 @@ function ClientComponent() {
 			}
 		});
 
-		let access_token = 'BQA8hKIYzkkc7VQeI7B6YYoP_Z_H8mpG61UPEXU69oG3k_QVwkTQTAzC7PZbWO1e1X81Q0SRylKJd2E60MJfeY-2fQOKHcjNXgGHJaDSQz2L1L6zw233SwzYdbdTj5l9B_yAtKJUKwlrhq8GL4mf_t4MV6Ib88zhSYMxJQUlT2jRjOStffGbGxG3j6Xn9bCBMBZV1o4kMPnHxCc8CJxkJg';
+
+		let spotifyAuth = new SpotifyAuth();
+
+		let access_token = spotifyAuth.getToken();
 
 		let headers = {'Authorization': 'Bearer ' + access_token};
 
