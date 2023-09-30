@@ -3,8 +3,8 @@
 
 export class SpotifyAuth {
 	clientId = "c34637d8e75249bf9b7b965b5772260d";
-	// redirectUri = "http://localhost:3000/auth";
 	redirectUri = "http://localhost:3000/auth";
+	// redirectUri = "https://s3.amazonaws.com/com.splootify/auth.html";
 	tokenStoreKey = "spotifyTokenStore";
 
 

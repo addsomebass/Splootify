@@ -2,16 +2,23 @@
 
 import React, {useState} from "react";
 import {SpotifyAuth} from "@/components/auth/SpotifyAuth";
+import SpotifyPlayer from "@/components/player/SpotifyPlayer";
 
 function ClientComponent() {
 
 	const [input, setInput] = useState('');
-	const [list, setList] = useState([]);
+	const [trackList, setTrackList] = useState([]);
 	const [albumResults, setAlbumResults] = useState([]);
 	const [artistResults, setArtistResults] = useState([]);
+	const [playerId, setPlayerId] = useState('');
 
 
 	let genres = ["acoustic", "afrobeat", "alt-rock", "alternative", "ambient", "anime", "black-metal", "bluegrass", "blues", "bossanova", "brazil", "breakbeat", "british", "cantopop", "chicago-house", "children", "chill", "classical", "club", "comedy", "country", "dance", "dancehall", "death-metal", "deep-house", "detroit-techno", "disco", "disney", "drum-and-bass", "dub", "dubstep", "edm", "electro", "electronic", "emo", "folk", "forro", "french", "funk", "garage", "german", "gospel", "goth", "grindcore", "groove", "grunge", "guitar", "happy", "hard-rock", "hardcore", "hardstyle", "heavy-metal", "hip-hop", "holidays", "honky-tonk", "house", "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-dance", "j-idol", "j-pop", "j-rock", "jazz", "k-pop", "kids", "latin", "latino", "malay", "mandopop", "metal", "metal-misc", "metalcore", "minimal-techno", "movies", "mpb", "new-age", "new-release", "opera", "pagode", "party", "philippines-opm", "piano", "pop", "pop-film", "post-dubstep", "power-pop", "progressive-house", "psych-rock", "punk", "punk-rock", "r-n-b", "rainy-day", "reggae", "reggaeton", "road-trip", "rock", "rock-n-roll", "rockabilly", "romance", "sad", "salsa", "samba", "sertanejo", "show-tunes", "singer-songwriter", "ska", "sleep", "songwriter", "soul", "soundtracks", "spanish", "study", "summer", "swedish", "synth-pop", "tango", "techno", "trance", "trip-hop", "turkish", "work-out", "world-music"]
+
+
+	// function setPlayerId(myString) {
+	// 	console.log(myString);
+	// }
 
 	async function fetchData() {
 
@@ -41,7 +48,7 @@ function ClientComponent() {
 		//
 		// console.log(myList);
 
-		setList(recommendations.results.tracks);
+		setTrackList(recommendations.results.tracks);
 
 	}
 
@@ -66,22 +73,22 @@ function ClientComponent() {
 
 		let params = {
 			limit: limit,
-			//The target size of the list of recommended tracks
+			//The target size of the trackList of recommended tracks
 
 			market: 'US',
 
 			seed_artists: seedArtists,
-			//A comma separated list of Spotify IDs for seed artists.
+			//A comma separated trackList of Spotify IDs for seed artists.
 			//Up to 5 seed values may be provided in any combination of seed_artists, seed_tracks and seed_genres.
 			//Note: only required if seed_genres and seed_tracks are not set.
 
 			seed_genres: seedGenres,
-			// A comma separated list of any genres in the set of available genre seeds.
+			// A comma separated trackList of any genres in the set of available genre seeds.
 			// Up to 5 seed values may be provided in any combination of seed_artists, seed_tracks and seed_genres.
 			// Note: only required if seed_artists and seed_tracks are not set.
 
 			seed_tracks: seedTracks,
-			// A comma separated list of Spotify IDs for a seed track.
+			// A comma separated trackList of Spotify IDs for a seed track.
 			// Up to 5 seed values may be provided in any combination of seed_artists, seed_tracks and seed_genres.
 			// Note: only required if seed_artists and seed_genres are not set.
 
@@ -262,8 +269,8 @@ function ClientComponent() {
 			<button onClick={fetchData}>Fetch Data</button>
 
 			<ul>
-				{list.map((track, index) => {
-					return <li key={index}><a href={track.external_urls.spotify}>{track.name}</a></li>
+				{trackList.map((track, index) => {
+					return <li key={index}><button onClick={() => setPlayerId(track.id)}>{track.name}</button></li>
 				})}
 			</ul>
 
@@ -281,6 +288,10 @@ function ClientComponent() {
 					<li key={index}>{artistResults[artistId]} - {artistId}</li>
 				))}
 			</ul>
+
+			<div>
+				<SpotifyPlayer trackId={playerId}/>
+			</div>
 
 		</div>
 	);
