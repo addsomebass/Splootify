@@ -1,13 +1,10 @@
 import React from 'react';
 import Select from 'react-select';
 
-const colourOptions = [
-	{ value: 'chocolate', label: 'Chocolate' },
-	{ value: 'strawberry', label: 'Strawberry' },
-	{ value: 'vanilla', label: 'Vanilla' }
-]
+export default function MultiSelectInput({ allOptions, selectedOptions, setSelectedOptions, label, placeholder }) {
 
-export default function MultiSelectInput({ allOptions, selectedOptions, setSelectedOptions }) {
+
+	const fieldId = "fieldId"
 
 	const handleChange = (selected) => {
 		// Check if the selected options are more than previously selected
@@ -27,14 +24,23 @@ export default function MultiSelectInput({ allOptions, selectedOptions, setSelec
 	}
 
 
+
+
+
 	return (
-		<Select
-			closeMenuOnSelect={false}
-			value={selectedOptions}
-			onChange={handleChange}
-			isMulti
-			options={allOptions}
-			backspaceRemovesValue={false}
-		/>
+		<div>
+			<label id={fieldId}>{label}</label>
+			<Select
+				closeMenuOnSelect={false}
+				value={selectedOptions}
+				onChange={handleChange}
+				isMulti
+				options={allOptions}
+				backspaceRemovesValue={false}
+				aria-labelledby={fieldId}
+				placeholder={placeholder}
+			/>
+		</div>
+
 	);
 }

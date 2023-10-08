@@ -129,7 +129,7 @@ export class SpotifyClient {
 		// Add the parameters to the URL
 		let params = {
 			q : artistSearchString,
-			type: "artist,album",
+			type: "artist,track",
 			market: "US",
 			limit: 15
 		}
