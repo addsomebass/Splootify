@@ -14,14 +14,8 @@ function SpotifySearchInput({setSelectedArtists}) {
 
 		return function(...args) {
 
-			console.log("about to return promise")
-			console.log(args)
 
 			return new Promise((resolve, reject) => {
-
-				console.log("executing promise")
-				console.log(resolve)
-				console.log(reject)
 
 				clearTimeout(timer);
 
@@ -43,8 +37,6 @@ function SpotifySearchInput({setSelectedArtists}) {
 
 	const fetchResults = debouncePromise((query) => {
 
-		console.log("exectuing function")
-		console.log(query);
 
 		return searchSpotifyAndFormatResults(query);
 
@@ -52,9 +44,6 @@ function SpotifySearchInput({setSelectedArtists}) {
 
 
 	async function searchSpotifyAndFormatResults(inputValue) {
-
-		console.log("executing spotify searhc");
-		console.log(inputValue);
 
 		if (!inputValue) {
 			return [];
