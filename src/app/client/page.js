@@ -51,13 +51,6 @@ function ClientComponent() {
 			null, null, null
 			);
 
-
-		// let myList = recommendations.results.tracks.map((track, index) => {
-		// 	return `<a href="${track.external_urls.spotify}">${track.name}</a><br>`
-		// });
-		//
-		// console.log(myList);
-
 		setTrackList(recommendations.results.tracks);
 
 	}
