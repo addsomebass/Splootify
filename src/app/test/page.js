@@ -3,6 +3,7 @@
 import MultiSelectInput from "@/components/form/MultiSelectInput";
 
 
-export default () => {
+const TestPage = () => {
 	return <div><MultiSelectInput></MultiSelectInput></div>
-}
+};
+export default TestPage
